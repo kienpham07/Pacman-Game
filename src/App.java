@@ -2,7 +2,7 @@ import javax.swing.JFrame;
 
 public class App {
     public static void main(String[] args) {
-        int rowNum = 21;
+        int rowNum = 22;
         int colNum = 19;
         int tileSize = 32;
         int boardWidth = colNum * tileSize;
@@ -18,6 +18,7 @@ public class App {
         PacMan pacManGame = new PacMan();
         frame.add(pacManGame);
         frame.pack();
+        pacManGame.requestFocus(); // Give keyboard focus to the PacMan game panel
         frame.setVisible(true);
 
     }
