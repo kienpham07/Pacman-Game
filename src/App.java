@@ -2,7 +2,7 @@ import javax.swing.JFrame;
 
 public class App {
     public static void main(String[] args) {
-        int rowNum = 22;
+        int rowNum = 23;
         int colNum = 19;
         int tileSize = 32;
         int boardWidth = colNum * tileSize;
