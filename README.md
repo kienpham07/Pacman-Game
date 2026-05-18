@@ -65,6 +65,7 @@ A classic Pac-Man-style desktop game built with Java Swing, featuring tile-based
 6. Clear all food to reload the map and continue playing
 7. When the game is over, press `R` to restart
 
+![Demo of the game](./demoGame.gif)
 ## Project Structure
 
 ```text
