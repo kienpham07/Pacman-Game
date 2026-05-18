@@ -5,6 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Random;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 public class PacMan extends JPanel implements ActionListener, KeyListener {
@@ -111,6 +114,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     Block pacman;
 
     Timer gameLoop;
+    Clip pacmanSound;
     char[] directions = {'U', 'D', 'L', 'R'};
     Random random = new Random();
     int score = 0;
@@ -168,6 +172,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
 
         // load map
         loadMap();
+        loadPacmanSound();
 
         // give ghosts random directions to move when first load map
         for (Block ghost : ghosts) {
@@ -177,6 +182,32 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         // Creates a timer that runs every 50 ms and calls this PacMan object's actionPerformed - 20fps (1000 / 50)
         gameLoop = new Timer(50, this); // This refers to PacMan object, which is the listener for the timer and ActionListner
         gameLoop.start(); // Starts the game loop timer
+        playPacmanSound();
+    }
+
+    private void loadPacmanSound() {
+        try {
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(
+                    getClass().getResource("audio/8bitAudio.wav")
+            );
+            pacmanSound = AudioSystem.getClip();
+            pacmanSound.open(audioStream);
+        } catch (Exception e) {
+            System.out.println("Could not load pacman sound: " + e.getMessage());
+        }
+    }
+
+    private void playPacmanSound() {
+        if (pacmanSound != null && !pacmanSound.isRunning()) {
+            pacmanSound.setFramePosition(0);
+            pacmanSound.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
+
+    private void stopPacmanSound() {
+        if (pacmanSound != null && pacmanSound.isRunning()) {
+            pacmanSound.stop();
+        }
     }
 
     public void loadMap() {
@@ -382,7 +413,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             scaredTimer.stop();
         }
 
-        scaredTimer = new Timer(10000, e -> {
+        scaredTimer = new Timer(6000, e -> {
             for (Block ghost : ghosts) {
                 if (ghost.ghostState == GhostState.SCARED) {
                     ghost.ghostState = GhostState.NORMAL;
@@ -427,6 +458,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
          */
         if (gameOver) {
             gameLoop.stop();
+            stopPacmanSound();
         }
     }
 
@@ -445,6 +477,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             score = 0;
             gameOver = false;
             gameLoop.start();
+            playPacmanSound();
         }
 
         // System.out.println("Key released: " + e.getKeyCode());
